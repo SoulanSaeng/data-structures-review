@@ -1,4 +1,4 @@
-package arrays;
+package dynamicprogramming;
 
 
 
@@ -6,17 +6,26 @@ public class EditDistance {
 
     public int minDistance(String a, String b) {
 
-        int [][] matrix = new int[a.length()][b.length()];
+        int aLen = a.length();
+        int bLen = b.length();
+
+        int [][] matrix = new int[aLen + 1][bLen + 1];
+
         initMatrix(matrix);
 
         int top;
         int left;
         int diag;
-
         int min;
 
-        for(int x = 1; x < a.length() ; x++){
-            for(int y = 1; y < b.length() ; y++){
+        for(int x = 1; x <= aLen ; x++){
+            for(int y = 1; y <= bLen ; y++){
+
+                if(a.charAt(x - 1) == b.charAt(y - 1)){
+                    matrix[x][y] = matrix[x - 1][y - 1];
+                    continue;
+
+                }
 
                 top  = matrix[x][y - 1];
                 left = matrix[x - 1][y];
@@ -24,15 +33,11 @@ public class EditDistance {
 
                 min = Math.min(top, left);
                 min = Math.min(min, diag);
-
-                //Case 1:
-                if(a.charAt(x) == b.charAt(y)) min +=1;
-
-                matrix[x][y] = min;
+                matrix[x][y] = min + 1;
             }
         }
 
-        return matrix[a.length() - 1][b.length() -1];
+        return matrix[aLen][bLen];
     }
 
     private void initMatrix(int [][] matrix){
